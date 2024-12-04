@@ -42,13 +42,13 @@ public class MySecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configer -> configer
-                .requestMatchers(HttpMethod.GET, "/employees").hasRole("EMPLOYEE")
+                .requestMatchers(HttpMethod.GET, "/api/employees").hasRole("EMPLOYEE")
                 // Это означает, что по адресу "/api/employees" (это адрес где используется метод get())
                 // эта страница будет доступна для сотрудника с ролью EMPLOYEE
-                .requestMatchers(HttpMethod.GET, "/employees/**").hasRole("EMPLOYEE")
-                .requestMatchers(HttpMethod.POST, "/employees").hasRole("MANAGER")
-                .requestMatchers(HttpMethod.PUT, "/employees").hasRole("MANAGER")
-                .requestMatchers(HttpMethod.DELETE, "/employees/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/employees/**").hasRole("EMPLOYEE")
+                .requestMatchers(HttpMethod.POST, "/api/employees").hasRole("MANAGER")
+                .requestMatchers(HttpMethod.PUT, "/api/employees").hasRole("MANAGER")
+                .requestMatchers(HttpMethod.DELETE, "/api/employees/**").hasRole("ADMIN")
         );
         http.httpBasic(Customizer.withDefaults());
         http.csrf(csrf -> csrf.disable());
