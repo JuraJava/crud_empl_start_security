@@ -42,9 +42,20 @@ public class MySecurityConfiguration {
 
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+        jdbcUserDetailsManager.setUsersByUsernameQuery(
+                "select members.user_id, pw, active from members where user_id=?");
+        // Это мы получаем данные из БД из таблицы members
+        // Чтобы то, что в кавычках светилось не зелёным, после слова select
+        // жмём Alt+Enter, выбираем inject language or reference, выбираем MySQL(SQL)
+        // Если оставить то, что в кавычках всё зелёным цветом,
+        // то программа тоже отработает, но только если всё без ошибок написано будет
+        jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
+                "select roles.user_id, role from roles where user_id=?");
+        // Это мы получаем данные из БД из таблицы roles
+        return jdbcUserDetailsManager;
     }
-    // Это мы сделали так как теперь нужные нам данные о паролях, ролях и т.д. мы будем брать из БД
+    // Это мы сделали так как теперь нужные нам данные о паролях, ролях и т.д. мы берём из БД
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -63,5 +74,5 @@ public class MySecurityConfiguration {
 
         return http.build();
     }
-// Изменения от 07.12.2024 21:45
+
 }
